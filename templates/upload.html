@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load uni_form_tags %}
+{% block head %}
+<head>
+<title>Upload tool</title>
+{% uni_form_setup %}
+<link rel="stylesheet" href="/media/uni_form/default.uni-form.css" type="text/css" />
+<script type="text/javascript" src="/media/js/upload-form.js">
+</script>
+</head>
+{% endblock %}
+{% block nav-upload %}
+<a href="/upload" class="active">Upload</a>
+{% endblock %}
+{% block content %}
+<form action="/upload/" method="POST" class="uniForm" enctype="multipart/form-data">
+    {%csrf_token%}
+    <fieldset>
+        {{form|as_uni_form}}
+        <div id="submit" class="form_block">
+            <input type="submit" class="primaryAction" value="Upload item"/>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

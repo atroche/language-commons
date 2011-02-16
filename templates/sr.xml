@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sr:Repository xmlns:dcterms="http://purl.org/dc/terms/"
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:sr="http://www.openarchives.org/OAI/2.0/static-repository"
+xmlns:oai="http://www.openarchives.org/OAI/2.0/"
+xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:olac="http://www.language-archives.org/OLAC/1.1/"
+xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/static-repository http://www.language-archives.org/OLAC/1.1/static-repository.xsd http://www.language-archives.org/OLAC/1.1/ http://www.language-archives.org/OLAC/1.1/olac.xsd http://purl.org/dc/elements/1.1/ http://www.language-archives.org/OLAC/1.1/dc.xsd http://purl.org/dc/terms/ http://www.language-archives.org/OLAC/1.1/dcterms.xsd">
+
+<sr:Identify>
+<oai:repositoryName>Language Commons Language Corpora</oai:repositoryName>
+<oai:baseURL>http://www.language-archives.org/hosted/languagecommons.org.xml</oai:baseURL>
+<oai:protocolVersion>2.0</oai:protocolVersion>
+<oai:adminEmail>laura@longnow.org</oai:adminEmail>
+<oai:earliestDatestamp>2010-09-23</oai:earliestDatestamp>
+<oai:deletedRecord>no</oai:deletedRecord>
+<oai:granularity>YYYY-MM-DD</oai:granularity>
+<oai:description>
+<oai-identifier xmlns="http://www.openarchives.org/OAI/2.0/oai-identifier"
+xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai-identifier http://www.language-archives.org/OLAC/1.1/oai-identifier.xsd">
+
+<scheme>oai</scheme>
+<repositoryIdentifier>languagecommons.org</repositoryIdentifier>
+<delimiter>:</delimiter>
+<sampleIdentifier>oai:languagecommons.org:Genesis-Corpus-Various</sampleIdentifier>
+</oai-identifier>
+</oai:description>
+<oai:description>
+<olac-archive xmlns="http://www.language-archives.org/OLAC/1.1/olac-archive"
+currentAsOf="2010-09-23" type="institutional"
+xsi:schemaLocation="http://www.language-archives.org/OLAC/1.1/olac-archive http://www.language-archives.org/OLAC/1.1/olac-archive.xsd">
+
+<archiveURL>
+http://www.archive.org/details/LanguageCommons</archiveURL>
+<participant email="ebice@meedan.net" name="Ed Bice"
+role="Coordinator x3" />
+<participant email="sb@csse.unimelb.edu.au" name="Steven Bird"
+role="Coordinator x3" />
+<participant email="laura@longnow.org" name="Laura Welcher"
+role="Coordinator x3" />
+<institution>Language Commons</institution>
+<institutionURL>http://languagecommons.org/</institutionURL>
+<shortLocation>San Francisco, USA</shortLocation>
+<location>Internet Archive, 300 Funston Avenue, San Francisco, CA
+94118</location>
+<synopsis>The Language Commons is an international consortium that
+is creating a large collection of written and spoken language
+material, made available under open licenses. The content includes
+text and speech corpora, along with translations, lexicons and
+other linguistic resources that support large-scale investigation
+of the world's languages. Members of the consortium include
+academic, industrial, and government organizations in many
+countries.</synopsis>
+<access>All holdings of the collection are freely accessible online
+under open licenses as a special collection within the Internet
+Archive.</access>
+<archivalSubmissionPolicy>The Language Commons accepts linguistic
+corpora which may be distributed under any of the licenses
+supported by the Internet Archive.</archivalSubmissionPolicy>
+</olac-archive>
+</oai:description>
+</sr:Identify>
+
+<sr:ListMetadataFormats>
+<oai:metadataFormat>
+<oai:metadataPrefix>olac</oai:metadataPrefix>
+<oai:schema>
+http://www.language-archives.org/OLAC/1.1/olac.xsd</oai:schema>
+<oai:metadataNamespace>
+http://www.language-archives.org/OLAC/1.1/</oai:metadataNamespace>
+</oai:metadataFormat>
+</sr:ListMetadataFormats>
+
+<sr:ListRecords metadataPrefix="olac">
+
+{% for item in items %}
+<oai:record>
+    <oai:header>
+        <oai:identifier>oai:languagecommons.org:{{item.identifier}}</oai:identifier>
+        <oai:datestamp>{{item.time_archived|date:"Y-m-d"}}</oai:datestamp>
+    </oai:header>
+    <oai:metadata>
+    <olac:olac>
+        {% for title in item.title_set.all %}
+            <dc:title>{{title.title}}</dc:title>
+        {% endfor %}
+        {% for date in item.date_set.all %}
+            <dc:date xsi:type="dcterms:W3CDTF">{{date.date}}</dc:date>
+        {% endfor %}
+        {% for contributor in item.contributor_set.all %}
+            <dc:contributor>{{contributor.contributor}}</dc:contributor>
+        {% endfor %}
+        {% for creator in item.creator_set.all %}
+            <dc:creator>{{creator.creator}}</dc:creator>
+        {% endfor %}
+        {% for publisher in item.publisher_set.all %}
+            <dc:publisher>{{publisher.publisher}}</dc:publisher>
+        {% endfor %}
+        {% for description in item.description_set.all %}
+            <dc:description>{{description.description}}</dc:description>
+        {% endfor %}
+        {% for linguistictype in item.linguistictype_set.all %}
+            <dc:type olac:code="{{linguistictype.linguistic_type}}" xsi:type="olac:linguistic-type"/>
+        {% endfor %}
+        {% for dcmitype in item.dcmitype_set.all %}
+            <dc:type xsi:type="dcterms:DCMIType">{{dcmitype.get_dcmi_type_display}}</dc:type>
+        {% endfor %}
+        {% for contentlanguage in item.contentlanguage_set.all %}
+            <dc:language olac:code="{{contentlanguage.language}}" xsi:type="olac:language"/>
+        {% endfor %}
+        {% for subjectlanguage in item.subjectlanguage_set.all %}
+            <dc:subject olac:code="{{subjectlanguage.language}}" xsi:type="olac:language"/>
+        {% endfor %}
+
+            <dc:identifier xsi:type="dcterms:URI">
+            http://archive.org/details/{{item.identifier}}
+            </dc:identifier>
+    </olac:olac>
+    </oai:metadata>
+</oai:record>
+{% endfor %}
+
+
+</sr:ListRecords>
+</sr:Repository>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Language Commons - Submissions</title>
+<link rel="stylesheet" type="text/css" href="/media/css/table-style.css" />
+<script type="text/javascript" src="/media/js/jquery.tablesorter.min.js">
+</script>
+<script type="text/javascript">
+$(document).ready(function() 
+    { 
+        $("#submissions").tablesorter({
+            sortList: [[1,1]]
+        }); 
+    }); 
+</script>
+{% endblock %}
+
+{% block nav-submissions %}
+<a href="/submissions" class="active">Submissions</a>
+{% endblock %}
+
+{% block content %}
+<table id="submissions" class="tablesorter">
+<thead>
+    <tr>
+        <th>Title</th>
+        <th>Time Submitted</th>
+        <th>Status</th>
+        <th>Admin Comment</th>
+    </tr>
+</thead>
+<tbody>
+{% for item in items %}
+    <tr>
+        <td>{{item.title}}</td>
+        <td>{{item.time_added|date:"Y-m-d H:i"}}</td>
+        <td>{{item.get_status_display}}</td>
+        <td>{{item.admin_comment}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

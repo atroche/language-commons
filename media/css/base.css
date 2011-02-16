@@ -1,0 +1,42 @@
+#nav li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 20px;
+}
+
+ul {
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+#wrapper {
+    width: 1000px;
+    position: relative;
+    left: 10%;
+}
+
+#submit {
+    margin-top:20px;
+    font-size:20pt;
+}
+.add_field {
+    left:5px;
+    position:relative;
+    background: url(/admin_media/img/admin/icon_addlink.gif);
+}
+html {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Arial, Verdana, sans-serif;
+}
+
+.active {
+    font-weight: bold;
+}
+
+a {
+    color: #800000;
+    text-decoration: none;
+}
+
+a:visted {
+    color: #800000;
+}
