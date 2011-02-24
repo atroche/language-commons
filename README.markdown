@@ -6,7 +6,7 @@ This is a tool for staging items before they are uploaded to the Language Common
 Installation
 ============
 
-Because Django is platform-, database- and webserver-independent, installation really depends on how you want to deploy it. For the [current (as of Feb 2011) Language Commons installation](http://upload.language-commons.org/), I use Apache (with WSGI) and MySQL for the database. Here's [a handy guide](http://articles.slicehost.com/2009/9/3/ubuntu-hardy-using-mod_wsgi-to-serve-your-application/) to setting up any Django application with a similar stack to what I used.
+Because Django is platform-, database- and webserver-independent, installation really depends on how you want to deploy it. For the [current (as of Feb 2011) Language Commons installation](http://upload.languagecommons.org/), I use Apache (with WSGI) and MySQL for the database. Here's [a handy guide](http://articles.slicehost.com/2009/9/3/ubuntu-hardy-using-mod_wsgi-to-serve-your-application/) to setting up any Django application with a similar stack to what I used.
 
 You need to create a file called secret.py within the 'uploader' app directory. It should contain two variables: 'accesskey' and 'secretkey'. These are not included in the repository for obvious reasons, but they're needed by the part of the application that interfaces with archive.org. Ask an administrator of the Language Commons for account details if you don't already have them.
 

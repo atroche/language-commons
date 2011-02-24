@@ -4,8 +4,6 @@ from django.db.models import CharField, ManyToManyField, DateTimeField,\
     ForeignKey
 from datetime import datetime
 
-# Create your models here.
-
 # From: http://www.language-archives.org/REC/role.html
 OLAC_CONTRIBUTOR_ROLES = (
     ('', '---'),
@@ -64,7 +62,10 @@ class Item(models.Model):
     time_archived = DateTimeField(null=True, blank=True, editable=False)
     archive_attempts = IntegerField(default=0, editable=False)
 
-    def first(self,attr):
+    def first(self, attr):
+        """
+        Returns the first-specified attribute of the Item.
+        """
         attr_list = eval("self.%s_set.all()" % attr.lower())
         if attr_list:
             return attr_list[len(attr_list)-1]
@@ -87,6 +88,10 @@ class Item(models.Model):
             return "No title"
 
     def save(self, *args, **kwargs):
+        """
+        If the Item's been archived or approved, record the time at which
+        it happened.
+        """
         if self.id:
             old_status = Item.objects.get(pk=self.id).status
             if old_status != 'Ar' and self.status == 'Ar':

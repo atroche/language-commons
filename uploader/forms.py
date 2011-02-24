@@ -7,6 +7,10 @@ from uni_form.helpers import FormHelper, Submit, Reset
 from uni_form.helpers import Layout, Fieldset, Row, HTML
 
 def date_validator(date_str):
+    """
+    Check to see if date_str conforms to OLAC standard.
+    If it's not, raise an error.
+    """
     valid_formats = ("%Y", "%Y-%m", "%Y-%m-%d")
     date = None
     for date_format in valid_formats:
@@ -23,7 +27,12 @@ def date_validator(date_str):
 class UploadDataForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
-        print kwargs
+        """
+        Need to override constructor because of all the dynamic form elements.
+        It basically works out which of the elements submitted via 'request' to
+        the form are 'extra' ones, then adds them to the form's internal
+        field structure in the right order.
+        """
         self.file = kwargs.get("file", None)
         extra_elems = []
         if 'extra_elems' in kwargs:
@@ -56,9 +65,6 @@ class UploadDataForm(forms.Form):
                 name)
             self.fields.keyOrder.pop()
 
-    #def bound_fields(self):
-    #    return [self[f_name] for f_name in self.fields.keyOrder]
-
     title = forms.CharField(required=False)
     date = forms.CharField(required=False, validators=[date_validator],
     help_text='Exact dates must be of the following format YYYY, YYYY-MM, YYYY-MM-DD, or YYYY-YYYY. Inexact dates must be wrapped in square brackets and can take any format, like so: [Twentieth Century]')
@@ -81,10 +87,3 @@ class UploadDataForm(forms.Form):
     file = forms.FileField(required=True)
 
     rendered_fields = []
-            
-    helper = FormHelper()
-    layout = Layout(
-                    Fieldset('title',
-                            ),
-                    )
-    helper.add_layout(layout)

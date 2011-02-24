@@ -4,19 +4,18 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 import uploader.models as mods
 
-def success(request):
-    return HttpResponse("Thank you for submitting an item!")
-
-def home(request):
-    return render_to_response("home.html",
-        context_instance=RequestContext(request))
-
 def submissions(request):
+    """ The public submissions viewer. """
     items = mods.Item.objects.all()
     return render_to_response("submissions.html",
         { "items": items }, context_instance=RequestContext(request))
 
 def upload(request):
+    """
+    Check if an Item's been submitted. If it has, process it and send submitter
+    to view submissions. If there are problems with it, send back the form
+    with errors. If no Item was submitted, just give the user an empty form!
+    """
     if request.POST:
         extra_elems = [(name, value) for (name, value) in request.POST.items()
                         if name.startswith("extra")]
@@ -26,10 +25,9 @@ def upload(request):
         except:
             form = UploadDataForm(request.POST, extra_elems=extra_elems)
         if form.is_valid():
-            text = add_item(form.cleaned_data)
-            return HttpResponseRedirect("/submissions?submitted=1")
+            add_item(form.cleaned_data)
+            return HttpResponseRedirect("/submissions")
         for field in form.fields:
-            print field
         return render_to_response("upload.html", {"form": form},
             context_instance=RequestContext(request))
     form = UploadDataForm()
@@ -40,7 +38,6 @@ def add_item(data):
     """ Take cleaned data from item upload form and store item """
     # Remove empty elements:
     data = [datum for datum in data.iteritems() if datum[1]]
-    print data
     el_group = {}
     # el_group will be: {"language": ["en", "de"], "title": ["blah"]}
     item = mods.Item.objects.create(status="P")
@@ -55,13 +52,16 @@ def add_item(data):
             el_group[name] = el_group.setdefault(name, [])
             el_group[name].append(value)
     def add_metadata(elem, elem_class):
+        """
+        Create the item's attibutes as necessary and attach them via
+        foreign key.
+        """
         if elem in el_group:
             elems = el_group[elem]
             if "language" in elem:
                 elem = "language"
             for value in elems:
                 kwargs = {elem.lower(): value, "item": item}
-                print elem_class
                 obj = elem_class.objects.create(**kwargs)
     meta_data_info = (
       ("title", mods.Title),
@@ -76,14 +76,13 @@ def add_item(data):
       ("subject_language", mods.SubjectLanguage),
       ("contributor", mods.Contributor),
     )
-
     for tup in meta_data_info:
         add_metadata(*tup)
 
     item.save()
-    return str(data)
     
 def generate_static_repo(request):
+    """ Generate the static OLAC XML file from a template and serve it. """
     items = mods.Item.objects.filter(status="Ar")
     return render_to_response("sr.xml", {"items": items},
         mimetype="text/xml", context_instance=RequestContext(request))
